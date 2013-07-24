@@ -70,7 +70,17 @@ static uint8_t prv_read(lwm2m_uri_t * uriP, char ** bufferP, int * lengthP,
 		return COAP_205_CONTENT ;
 	} else {
 		int objInstance = uriP->objInstance;
+
 		int resId = uriP->resID;
+
+		lua_pushnil(L);
+		lua_next(L, -2);
+		if (lua_istable(L, -1)) {
+			printf("nested table");
+			lua_pop(L, 2);
+			lua_pushinteger(L, objInstance + 1);
+			lua_gettable(L, -2);
+		}
 
 		lua_pushinteger(L, resId);
 		lua_gettable(L, -2);

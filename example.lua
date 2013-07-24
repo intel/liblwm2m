@@ -21,10 +21,41 @@ device_object = {
         [11] = 0,
         [13] = function() return os.time() end,
         [15] = "U"
-    }
+    }     
 }
 
-objects = { [3] = device_object , [4] = {} }
+applications_object = {
+	id = 2048,
+	resources = {
+		{ [0] = "ECLO",
+		  [1] = "v1.0",
+		  [2] = "**datamodel**",
+		  [3] = 0 },
+		{ [0] = "appname2",
+		  [1] = "v2.0",
+		  [2] = "**datamodel**",
+		  [3] = 1 },
+	}
+}
+
+--[[
+applications_data_eclo_object = {
+	id = 4096,
+	resources = [
+		{ [0] = 28.0,
+		  [1] = 0.98 },
+		  
+		{ [0] = "appname2",
+		  [1] = "v2.0",
+		  [2] = "datamodelentlvoujson",
+		  [3] = 1 },
+	]
+}
+]]
+
+
+
+objects = { [3] = device_object , [4] = { id = 4, resources = { [0] = 'salut' } }, [2048] = applications_object }
 
 client = lwm2m.init(udp:getfd(), 'testlua', objects)
 mt = { __index = lwm2m }
