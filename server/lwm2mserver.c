@@ -81,7 +81,7 @@ Contains code snippets which are:
 #include <signal.h>
 
 #define MAX_PACKET_SIZE 128
-#define SERVER_PORT "5684"
+#define SERVER_PORT "5683"
 
 static int g_quit = 0;
 
@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
         FD_SET(socket, &readfds);
 
         tv.tv_usec = 0;
-        tv.tv_sec = 0;
+        tv.tv_sec = 1;
 
         result = select(FD_SETSIZE, &readfds, 0, 0, &tv);
 
