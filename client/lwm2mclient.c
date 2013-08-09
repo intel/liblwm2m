@@ -68,31 +68,40 @@ void print_usage(void)
 int get_socket()
 {
     int s = -1;
-    struct addrinfo hints;
-    struct addrinfo *res;
     struct addrinfo *p;
 
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = PF_INET6;
-    hints.ai_socktype = SOCK_DGRAM;
-    hints.ai_flags = AI_PASSIVE;
+    struct sockaddr_in sin = {};
+    socklen_t slen;
+    int sock;
+    short unsigned int port;
 
-    getaddrinfo(NULL, "5683", &hints, &res);
-
-    for(p = res ; p != NULL && s == -1 ; p = p->ai_next)
+    s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (s >= 0)
     {
-        s = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-        if (s >= 0)
+        struct sockaddr_in sin = {};
+        sin.sin_family = AF_INET;
+        sin.sin_addr.s_addr = htonl(INADDR_ANY);
+        sin.sin_port = 0;
+
+        // bind to port 0 : the O/S will find a free port for us (e.g. 1234)
+        // we will send UDP datagram to the server host:5683 and it will reinterpret_castply to the
+        // bound local port (e.g. 1234).
+        if (-1 == bind(s, (struct sockaddr *)&sin, sizeof(sin)))
         {
-            if (-1 == bind(s, p->ai_addr, p->ai_addrlen))
-            {
-                close(s);
-                s = -1;
-            }
+            close(s);
+            s = -1;
+        } else {
+
+            int port;
+
+            slen = sizeof(sin);
+            getsockname(s, (struct sockaddr *)&sin, &slen);
+            port = ntohs(sin.sin_port);
+
+            printf("bound, local port : %d\n", port);
+
         }
     }
-
-    freeaddrinfo(res);
 
     return s;
 }
@@ -138,7 +147,7 @@ int main(int argc, char *argv[])
     signal(SIGINT, handle_sigint);
 
     memset(&security, 0, sizeof(lwm2m_security_t));
-    result = lwm2m_add_server(lwm2mH, 123, "::1", 5684, &security);
+    result = lwm2m_add_server(lwm2mH, 123, "::1", 5683, &security);
     if (result != 0)
     {
         fprintf(stderr, "lwm2m_add_server() failed: 0x%X\r\n", result);

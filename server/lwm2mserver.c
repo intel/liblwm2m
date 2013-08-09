@@ -81,7 +81,7 @@ Contains code snippets which are:
 #include <signal.h>
 
 #define MAX_PACKET_SIZE 128
-#define SERVER_PORT "5684"
+#define SERVER_PORT "5683"
 
 static int g_quit = 0;
 
