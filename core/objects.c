@@ -71,7 +71,7 @@ coap_status_t object_read(lwm2m_context_t * contextP,
         return METHOD_NOT_ALLOWED_4_05;
     }
 
-    return targetP->readFunc(uriP, bufferP, lengthP, targetP);
+    return targetP->readFunc(contextP, uriP, bufferP, lengthP, targetP);
 }
 
 
@@ -98,7 +98,7 @@ coap_status_t object_write(lwm2m_context_t * contextP,
         return METHOD_NOT_ALLOWED_4_05;
     }
 
-    return targetP->writeFunc(uriP, buffer, length, targetP);
+    return targetP->writeFunc(contextP, uriP, buffer, length, targetP);
 }
 
 coap_status_t object_create_execute(lwm2m_context_t * contextP,
@@ -124,7 +124,7 @@ coap_status_t object_create_execute(lwm2m_context_t * contextP,
             return METHOD_NOT_ALLOWED_4_05;
         }
 
-        return targetP->executeFunc(uriP, buffer, length, targetP);
+        return targetP->executeFunc(contextP, uriP, buffer, length, targetP);
     }
     else if (uriP->flag & LWM2M_URI_FLAG_RESOURCE_ID == 0
           && length != 0)
@@ -139,7 +139,7 @@ coap_status_t object_create_execute(lwm2m_context_t * contextP,
             return METHOD_NOT_ALLOWED_4_05;
         }
 
-        return targetP->createFunc(uriP, buffer, length, targetP);
+        return targetP->createFunc(contextP, uriP, buffer, length, targetP);
     }
     else return BAD_REQUEST_4_00;
 }
@@ -166,7 +166,7 @@ coap_status_t object_delete(lwm2m_context_t * contextP,
         return METHOD_NOT_ALLOWED_4_05;
     }
 
-    return targetP->deleteFunc(uriP->instanceId, targetP);
+    return targetP->deleteFunc(contextP, uriP->instanceId, targetP);
 }
 
 int prv_getRegisterPayload(lwm2m_context_t * contextP,
