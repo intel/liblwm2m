@@ -373,6 +373,7 @@ typedef struct
     lwm2m_transaction_t * transactionList;
     // buffer send callback
     lwm2m_buffer_send_callback_t bufferSendCallback;
+    void *userdata;
 } lwm2m_context_t;
 
 // initialize a liblwm2m context. endpointName, numObject and objectList are ignored for pure servers.
