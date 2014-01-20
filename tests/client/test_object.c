@@ -96,8 +96,7 @@ static void prv_output_buffer(uint8_t * buffer,
     }
 }
 
-static uint8_t prv_read(lwm2m_context_t *contextP,
-                        lwm2m_uri_t * uriP,
+static uint8_t prv_read(lwm2m_uri_t * uriP,
                         char ** bufferP,
                         int * lengthP,
                         lwm2m_object_t * objectP)
@@ -179,8 +178,7 @@ static uint8_t prv_read(lwm2m_context_t *contextP,
     }
 }
 
-static uint8_t prv_write(lwm2m_context_t *contextP,
-                         lwm2m_uri_t * uriP,
+static uint8_t prv_write(lwm2m_uri_t * uriP,
                          char * buffer,
                          int length,
                          lwm2m_object_t * objectP)
@@ -211,8 +209,7 @@ static uint8_t prv_write(lwm2m_context_t *contextP,
     }
 }
 
-static uint8_t prv_create(lwm2m_context_t *contextP,
-                          lwm2m_uri_t * uriP,
+static uint8_t prv_create(lwm2m_uri_t * uriP,
                           char * buffer,
                           int length,
                           lwm2m_object_t * objectP)
@@ -262,8 +259,7 @@ static uint8_t prv_create(lwm2m_context_t *contextP,
     return COAP_201_CREATED;
 }
 
-static uint8_t prv_delete(lwm2m_context_t *contextP,
-                          uint16_t id,
+static uint8_t prv_delete(uint16_t id,
                           lwm2m_object_t * objectP)
 {
     prv_instance_t * targetP;
@@ -277,8 +273,7 @@ static uint8_t prv_delete(lwm2m_context_t *contextP,
     return COAP_202_DELETED;
 }
 
-static uint8_t prv_exec(lwm2m_context_t *contextP,
-                        lwm2m_uri_t * uriP,
+static uint8_t prv_exec(lwm2m_uri_t * uriP,
                         char * buffer,
                         int length,
                         lwm2m_object_t * objectP)

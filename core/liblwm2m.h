@@ -165,14 +165,13 @@ int lwm2m_stringToUri(char * buffer, size_t buffer_len, lwm2m_uri_t * uriP);
  */
 
 typedef struct _lwm2m_object_t lwm2m_object_t;
-typedef struct _lwm2m_context_t lwm2m_context_t;
 
-typedef uint8_t (*lwm2m_read_callback_t) (struct _lwm2m_context_t * contextP, lwm2m_uri_t * uriP, char ** bufferP, int * lengthP, lwm2m_object_t * objectP);
-typedef uint8_t (*lwm2m_write_callback_t) (struct _lwm2m_context_t * contextP, lwm2m_uri_t * uriP, char * buffer, int length, lwm2m_object_t * objectP);
-typedef uint8_t (*lwm2m_execute_callback_t) (struct _lwm2m_context_t * contextP, lwm2m_uri_t * uriP, char * buffer, int length, lwm2m_object_t * objectP);
-typedef uint8_t (*lwm2m_create_callback_t) (struct _lwm2m_context_t * contextP, lwm2m_uri_t * uriP, char * buffer, int length, lwm2m_object_t * objectP);
-typedef uint8_t (*lwm2m_delete_callback_t) (struct _lwm2m_context_t * contextP, uint16_t id, lwm2m_object_t * objectP);
-typedef void (*lwm2m_close_callback_t) (struct _lwm2m_context_t * contextP, lwm2m_object_t * objectP);
+typedef uint8_t (*lwm2m_read_callback_t) (lwm2m_uri_t * uriP, char ** bufferP, int * lengthP, lwm2m_object_t * objectP);
+typedef uint8_t (*lwm2m_write_callback_t) (lwm2m_uri_t * uriP, char * buffer, int length, lwm2m_object_t * objectP);
+typedef uint8_t (*lwm2m_execute_callback_t) (lwm2m_uri_t * uriP, char * buffer, int length, lwm2m_object_t * objectP);
+typedef uint8_t (*lwm2m_create_callback_t) (lwm2m_uri_t * uriP, char * buffer, int length, lwm2m_object_t * objectP);
+typedef uint8_t (*lwm2m_delete_callback_t) (uint16_t id, lwm2m_object_t * objectP);
+typedef void (*lwm2m_close_callback_t) (lwm2m_object_t * objectP);
 
 
 struct _lwm2m_object_t
@@ -348,13 +347,13 @@ typedef struct _lwm2m_observed_
     lwm2m_watcher_t * watcherList;
 } lwm2m_observed_t;
 
-typedef uint8_t (*lwm2m_buffer_send_callback_t)(struct _lwm2m_context_t *contextP, int, uint8_t *, size_t, uint8_t *, size_t);
+typedef uint8_t (*lwm2m_buffer_send_callback_t)(int, uint8_t *, size_t, uint8_t *, size_t);
 
 /*
  * LWM2M Context
  */
 
-struct _lwm2m_context_t
+typedef struct
 {
     int    socket;
 #ifdef LWM2M_CLIENT_MODE
@@ -375,7 +374,7 @@ struct _lwm2m_context_t
     // buffer send callback
     lwm2m_buffer_send_callback_t bufferSendCallback;
     void *userdata;
-};
+} lwm2m_context_t;
 
 // initialize a liblwm2m context. endpointName, numObject and objectList are ignored for pure servers.
 lwm2m_context_t * lwm2m_init(int socket, char * endpointName, uint16_t numObject, lwm2m_object_t * objectList[], lwm2m_buffer_send_callback_t bufferSendCallback);

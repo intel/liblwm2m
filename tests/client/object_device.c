@@ -276,8 +276,7 @@ error:
     return 0;
 }
 
-static uint8_t prv_device_read(lwm2m_context_t *contextP,
-                               lwm2m_uri_t * uriP,
+static uint8_t prv_device_read(lwm2m_uri_t * uriP,
                                char ** bufferP,
                                int * lengthP,
                                lwm2m_object_t * objectP)
@@ -506,8 +505,7 @@ static uint8_t prv_device_read(lwm2m_context_t *contextP,
 
 }
 
-static uint8_t prv_device_write(lwm2m_context_t *contextP,
-                                lwm2m_uri_t * uriP,
+static uint8_t prv_device_write(lwm2m_uri_t * uriP,
                                 char * buffer,
                                 int length,
                                 lwm2m_object_t * objectP)
@@ -547,8 +545,7 @@ static uint8_t prv_device_write(lwm2m_context_t *contextP,
     }
 }
 
-static uint8_t prv_device_execute(lwm2m_context_t *contextP,
-                                  lwm2m_uri_t * uriP,
+static uint8_t prv_device_execute(lwm2m_uri_t * uriP,
                                   char * buffer,
                                   int length,
                                   lwm2m_object_t * objectP)
