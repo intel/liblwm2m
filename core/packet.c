@@ -185,8 +185,6 @@ int lwm2m_handle_packet(lwm2m_context_t * contextP,
     coap_status_t coap_error_code = NO_ERROR;
     static coap_packet_t message[1];
     static coap_packet_t response[1];
-    uint8_t pktBuffer[COAP_MAX_PACKET_SIZE+1];
-    size_t pktBufferLen = 0;
 
     coap_error_code = coap_parse_message(message, buffer, (uint16_t)length);
     if (coap_error_code==NO_ERROR)
@@ -241,7 +239,7 @@ int lwm2m_handle_packet(lwm2m_context_t * contextP,
                 else if ( IS_OPTION(message, COAP_OPTION_BLOCK2) )
                 {
                     /* unchanged new_offset indicates that resource is unaware of blockwise transfer */
-                    if (new_offset==block_offset)
+                    if ((uint32_t)new_offset==(uint32_t)block_offset)
                     {
                         LOG("Blockwise: unaware resource with payload length %u/%u\n", response->payload_len, block_size);
                         if (block_offset >= response->payload_len)
@@ -275,7 +273,7 @@ int lwm2m_handle_packet(lwm2m_context_t * contextP,
 
                 coap_error_code = message_send(contextP, response, fromAddr, fromAddrLen);
 
-                free(response->payload);
+                lwm2m_free(response->payload);
                 response->payload = NULL;
                 response->payload_len = 0;
             }
@@ -329,6 +327,7 @@ int lwm2m_handle_packet(lwm2m_context_t * contextP,
         coap_set_payload(message, coap_error_message, strlen(coap_error_message));
         message_send(contextP, message, fromAddr, fromAddrLen);
     }
+    return coap_error_code;
 }
 
 

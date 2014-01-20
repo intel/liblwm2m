@@ -83,12 +83,12 @@ coap_status_t handle_dm_request(lwm2m_context_t * contextP,
         break;
     case COAP_POST:
         {
-            result = object_create_execute(contextP, uriP, message->payload, message->payload_len);
+            result = object_create_execute(contextP, uriP, (char *)message->payload, message->payload_len);
         }
         break;
     case COAP_PUT:
         {
-            result = object_write(contextP, uriP, message->payload, message->payload_len);
+            result = object_write(contextP, uriP, (char *)message->payload, message->payload_len);
         }
         break;
     case COAP_DELETE:
@@ -162,7 +162,7 @@ static int prv_make_operation(lwm2m_context_t * contextP,
 
     if (callback != NULL)
     {
-        dataP = (dm_data_t *)malloc(sizeof(dm_data_t));
+        dataP = (dm_data_t *)lwm2m_malloc(sizeof(dm_data_t));
         if (dataP == NULL)
         {
             transaction_free(transaction);
