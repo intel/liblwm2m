@@ -389,6 +389,7 @@ int lwm2m_step(lwm2m_context_t * contextP, struct timeval * timeoutP);
 int lwm2m_handle_packet(lwm2m_context_t * contextP, uint8_t * buffer, int length, uint8_t * fromAddr, size_t fromAddrLen);
 
 #ifdef LWM2M_CLIENT_MODE
+int lwm2m_ping(lwm2m_context_t * contextP);
 int lwm2m_set_bootstrap_server(lwm2m_context_t * contextP, lwm2m_bootstrap_server_t * serverP);
 int lwm2m_add_server(lwm2m_context_t * contextP, uint16_t shortID, uint8_t *addr, size_t addrLen, lwm2m_security_t * securityP);
 

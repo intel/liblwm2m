@@ -33,6 +33,23 @@ David Navarro <david.navarro@intel.com>
 
 
 #ifdef LWM2M_CLIENT_MODE
+int lwm2m_ping(lwm2m_context_t * contextP)
+{
+    lwm2m_server_t *srv = contextP->serverList;
+    while (NULL != srv)
+    {
+        if (srv->status == STATE_REGISTERED) {
+            coap_packet_t message[1];
+            coap_init_message(message, COAP_TYPE_CON, COAP_204_CHANGED, 0);
+            coap_set_payload(message, NULL, 0);
+            (void)message_send(contextP, message, srv->addr, srv->addrLen);
+            break;
+        }
+        srv = srv->next;
+    }
+    return NO_ERROR;
+}
+
 coap_status_t handle_dm_request(lwm2m_context_t * contextP,
                                 lwm2m_uri_t * uriP,
                                 uint8_t * fromAddr,
