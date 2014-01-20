@@ -202,7 +202,7 @@ int transaction_send(lwm2m_context_t * contextP,
         break;
 
     default:
-        return;
+        return COAP_500_INTERNAL_SERVER_ERROR;
     }
 
     if (transacP->retrans_counter == 0)

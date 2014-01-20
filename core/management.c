@@ -83,12 +83,12 @@ coap_status_t handle_dm_request(lwm2m_context_t * contextP,
         break;
     case COAP_POST:
         {
-            result = object_create_execute(contextP, uriP, message->payload, message->payload_len);
+            result = object_create_execute(contextP, uriP, (char *)message->payload, message->payload_len);
         }
         break;
     case COAP_PUT:
         {
-            result = object_write(contextP, uriP, message->payload, message->payload_len);
+            result = object_write(contextP, uriP, (char *)message->payload, message->payload_len);
         }
         break;
     case COAP_DELETE:

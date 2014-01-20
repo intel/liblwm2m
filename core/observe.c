@@ -29,7 +29,6 @@ David Navarro <david.navarro@intel.com>
 */
 
 #include "internals.h"
-#include <stdio.h>
 
 
 #ifdef LWM2M_CLIENT_MODE

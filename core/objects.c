@@ -82,7 +82,7 @@ coap_status_t object_write(lwm2m_context_t * contextP,
 {
     lwm2m_object_t * targetP;
 
-    if (uriP->flag & LWM2M_URI_FLAG_INSTANCE_ID == 0)
+    if ((uriP->flag & LWM2M_URI_FLAG_INSTANCE_ID) == 0)
     {
         return BAD_REQUEST_4_00;
     }
@@ -115,8 +115,8 @@ coap_status_t object_create_execute(lwm2m_context_t * contextP,
         return NOT_FOUND_4_04;
     }
 
-    if (uriP->flag & LWM2M_URI_FLAG_INSTANCE_ID != 0
-     && uriP->flag & LWM2M_URI_FLAG_RESOURCE_ID != 0)
+    if ((uriP->flag & LWM2M_URI_FLAG_INSTANCE_ID) != 0
+     && (uriP->flag & LWM2M_URI_FLAG_RESOURCE_ID) != 0)
     {
         // This is an execute
         if (NULL == targetP->executeFunc)
@@ -126,7 +126,7 @@ coap_status_t object_create_execute(lwm2m_context_t * contextP,
 
         return targetP->executeFunc(uriP, buffer, length, targetP);
     }
-    else if (uriP->flag & LWM2M_URI_FLAG_RESOURCE_ID == 0
+    else if ((uriP->flag & LWM2M_URI_FLAG_RESOURCE_ID) == 0
           && length != 0)
     {
         // This is a create
@@ -149,8 +149,8 @@ coap_status_t object_delete(lwm2m_context_t * contextP,
 {
     lwm2m_object_t * targetP;
 
-    if (uriP->flag & LWM2M_URI_FLAG_INSTANCE_ID == 0
-     || uriP->flag & LWM2M_URI_FLAG_RESOURCE_ID != 0)
+    if ((uriP->flag & LWM2M_URI_FLAG_INSTANCE_ID) == 0
+     || (uriP->flag & LWM2M_URI_FLAG_RESOURCE_ID) != 0)
     {
         return BAD_REQUEST_4_00;
     }
@@ -171,10 +171,11 @@ coap_status_t object_delete(lwm2m_context_t * contextP,
 
 int prv_getRegisterPayload(lwm2m_context_t * contextP,
                            char * buffer,
-                           size_t length)
+                           size_t len)
 {
     int index;
     int i;
+    int length = len;
 
     // index can not be greater than length
     index = 0;
@@ -185,7 +186,7 @@ int prv_getRegisterPayload(lwm2m_context_t * contextP,
             int result;
 
             result = snprintf(buffer + index, length - index, "<%hu>,", contextP->objectList[i]->objID);
-            if (result > 0 && result <= length - index)
+            if (result > 0 && result <= (length - index))
             {
                 index += result;
             }
