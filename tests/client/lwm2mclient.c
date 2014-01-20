@@ -71,7 +71,8 @@ void print_usage(void)
     fprintf(stderr, "Launch a LWM2M client.\r\n\n");
 }
 
-static uint8_t prv_buffer_send(int sock,
+static uint8_t prv_buffer_send(lwm2m_context_t * contextP,
+                          int sock,
                           uint8_t * buffer,
                           size_t length,
                           uint8_t * addr,
