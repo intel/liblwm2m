@@ -146,13 +146,7 @@ int get_socket()
     {
         s = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
         if (s >= 0)
-        {
-            if (-1 == bind(s, p->ai_addr, p->ai_addrlen))
-            {
-                close(s);
-                s = -1;
-            }
-        }
+            break;
     }
 
     freeaddrinfo(res);
@@ -272,6 +266,9 @@ int main(int argc, char *argv[])
     lwm2m_object_t * objArray[2];
     lwm2m_security_t security;
     int i;
+    char *host = "::1";
+    int port = 5683;
+
     command_desc_t commands[] =
     {
             {"list", "List known servers.", NULL, prv_output_servers, NULL},
@@ -283,6 +280,13 @@ int main(int argc, char *argv[])
 
             COMMAND_END_LIST
     };
+
+    argc--;
+    argv++;
+    if (argc > 0)
+        host = argv[0];
+    if (argc > 1)
+        port = strtod(argv[1], NULL);
 
     socket = get_socket();
     if (socket < 0)
@@ -315,7 +319,7 @@ int main(int argc, char *argv[])
     signal(SIGINT, handle_sigint);
 
     memset(&security, 0, sizeof(lwm2m_security_t));
-    result = prv_add_server(lwm2mH, 123, "::1", 5684, &security);
+    result = prv_add_server(lwm2mH, 123, host, port, &security);
     if (result != 0)
     {
         fprintf(stderr, "lwm2m_add_server() failed: 0x%X\r\n", result);
