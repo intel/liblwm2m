@@ -81,11 +81,12 @@ Contains code snippets which are:
 #include "commandline.h"
 
 #define MAX_PACKET_SIZE 128
-#define SERVER_PORT "5684"
+#define SERVER_PORT "5683"
 
 static int g_quit = 0;
 
-static uint8_t prv_buffer_send(int sock,
+static uint8_t prv_buffer_send(lwm2m_context_t * contextP,
+                          int sock,
                           uint8_t * buffer,
                           size_t length,
                           uint8_t * addr,
@@ -522,7 +523,7 @@ int get_socket()
     struct addrinfo *p;
 
     memset(&hints, 0, sizeof hints);
-    hints.ai_family = PF_INET6;
+    hints.ai_family = PF_INET;
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_flags = AI_PASSIVE;
 

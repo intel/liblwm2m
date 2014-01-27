@@ -33,6 +33,23 @@ David Navarro <david.navarro@intel.com>
 
 
 #ifdef LWM2M_CLIENT_MODE
+int lwm2m_ping(lwm2m_context_t * contextP)
+{
+    lwm2m_server_t *srv = contextP->serverList;
+    while (NULL != srv)
+    {
+        if (srv->status == STATE_REGISTERED) {
+            coap_packet_t message[1];
+            coap_init_message(message, COAP_TYPE_CON, COAP_204_CHANGED, 0);
+            coap_set_payload(message, NULL, 0);
+            (void)message_send(contextP, message, srv->addr, srv->addrLen);
+            break;
+        }
+        srv = srv->next;
+    }
+    return NO_ERROR;
+}
+
 coap_status_t handle_dm_request(lwm2m_context_t * contextP,
                                 lwm2m_uri_t * uriP,
                                 uint8_t * fromAddr,
@@ -66,12 +83,12 @@ coap_status_t handle_dm_request(lwm2m_context_t * contextP,
         break;
     case COAP_POST:
         {
-            result = object_create_execute(contextP, uriP, message->payload, message->payload_len);
+            result = object_create_execute(contextP, uriP, (char *)message->payload, message->payload_len);
         }
         break;
     case COAP_PUT:
         {
-            result = object_write(contextP, uriP, message->payload, message->payload_len);
+            result = object_write(contextP, uriP, (char *)message->payload, message->payload_len);
         }
         break;
     case COAP_DELETE:
@@ -145,7 +162,7 @@ static int prv_make_operation(lwm2m_context_t * contextP,
 
     if (callback != NULL)
     {
-        dataP = (dm_data_t *)malloc(sizeof(dm_data_t));
+        dataP = (dm_data_t *)lwm2m_malloc(sizeof(dm_data_t));
         if (dataP == NULL)
         {
             transaction_free(transaction);

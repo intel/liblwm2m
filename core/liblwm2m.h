@@ -36,6 +36,16 @@ David Navarro <david.navarro@intel.com>
 #include <stdbool.h>
 #include <sys/time.h>
 
+#ifndef LWM2M_EMBEDDED_MODE
+#define lwm2m_gettimeofday gettimeofday
+#define lwm2m_malloc malloc
+#define lwm2m_free free
+#else
+int lwm2m_gettimeofday(struct timeval *tv, void *p);
+void *lwm2m_malloc(size_t s);
+void lwm2m_free(void *p);
+#endif
+
 /*
  * Error code
  */
@@ -347,13 +357,14 @@ typedef struct _lwm2m_observed_
     lwm2m_watcher_t * watcherList;
 } lwm2m_observed_t;
 
-typedef uint8_t (*lwm2m_buffer_send_callback_t)(int, uint8_t *, size_t, uint8_t *, size_t);
+struct _lwm2m_context;
+typedef uint8_t (*lwm2m_buffer_send_callback_t)(struct _lwm2m_context * contextP, int, uint8_t *, size_t, uint8_t *, size_t);
 
 /*
  * LWM2M Context
  */
 
-typedef struct
+struct _lwm2m_context
 {
     int    socket;
 #ifdef LWM2M_CLIENT_MODE
@@ -373,7 +384,9 @@ typedef struct
     lwm2m_transaction_t * transactionList;
     // buffer send callback
     lwm2m_buffer_send_callback_t bufferSendCallback;
-} lwm2m_context_t;
+    void *userdata;
+};
+typedef struct _lwm2m_context lwm2m_context_t;
 
 // initialize a liblwm2m context. endpointName, numObject and objectList are ignored for pure servers.
 lwm2m_context_t * lwm2m_init(int socket, char * endpointName, uint16_t numObject, lwm2m_object_t * objectList[], lwm2m_buffer_send_callback_t bufferSendCallback);
@@ -386,6 +399,7 @@ int lwm2m_step(lwm2m_context_t * contextP, struct timeval * timeoutP);
 int lwm2m_handle_packet(lwm2m_context_t * contextP, uint8_t * buffer, int length, uint8_t * fromAddr, size_t fromAddrLen);
 
 #ifdef LWM2M_CLIENT_MODE
+int lwm2m_ping(lwm2m_context_t * contextP);
 int lwm2m_set_bootstrap_server(lwm2m_context_t * contextP, lwm2m_bootstrap_server_t * serverP);
 int lwm2m_add_server(lwm2m_context_t * contextP, uint16_t shortID, uint8_t *addr, size_t addrLen, lwm2m_security_t * securityP);
 

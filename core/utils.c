@@ -28,6 +28,7 @@ David Navarro <david.navarro@intel.com>
 
 */
 
+#include "liblwm2m.h"
 #include "internals.h"
 #include <stdlib.h>
 #include <string.h>
@@ -95,16 +96,33 @@ int lwm2m_int32ToPlainText(int32_t data,
     return lwm2m_int64ToPlainText((int64_t)data, bufferP);
 }
 
+#ifdef LWM2M_EMBEDDED_MODE
+int64_t itoa(int64_t n, char *s)
+{
+    int i =  0;
+
+    if(n / 10 != 0)
+        i = itoa(n/10, s);
+    else if(n < 0)
+        s[i++] = '-';
+
+    s[i++] = abs(n % 10) + '0';
+    s[i] = '\0';
+
+    return i;
+}
+
 int lwm2m_int64ToPlainText(int64_t data,
                            char ** bufferP)
 {
     char string[32];
     int len;
 
-    len = snprintf(string, 32, "%" PRId64, data);
+    itoa(data, string);
+    len = strlen(string);
     if (len > 0)
     {
-        *bufferP = (char *)malloc(len);
+        *bufferP = (char *)lwm2m_malloc(len);
 
         if (NULL != *bufferP)
         {
@@ -118,7 +136,31 @@ int lwm2m_int64ToPlainText(int64_t data,
 
     return len;
 }
+#else
+int lwm2m_int64ToPlainText(int64_t data,
+                           char ** bufferP)
+{
+    char string[32];
+    int len;
 
+    len = snprintf(string, 32, "%" PRId64, data);
+    if (len > 0)
+    {
+        *bufferP = (char *)lwm2m_malloc(len);
+
+        if (NULL != *bufferP)
+        {
+            strncpy(*bufferP, string, len);
+        }
+        else
+        {
+            len = 0;
+        }
+    }
+
+    return len;
+}
+#endif
 
 int lwm2m_float32ToPlainText(float data,
                              char ** bufferP)
@@ -136,7 +178,7 @@ int lwm2m_float64ToPlainText(double data,
     len = snprintf(string, 64, "%lf", data);
     if (len > 0)
     {
-        *bufferP = (char *)malloc(len);
+        *bufferP = (char *)lwm2m_malloc(len);
 
         if (NULL != *bufferP)
         {

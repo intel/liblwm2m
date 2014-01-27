@@ -31,15 +31,16 @@ David Navarro <david.navarro@intel.com>
 #include "internals.h"
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 
 static int prv_parse_number(const char * uriString,
-                            size_t uriLength,
+                            size_t len,
                             int * headP)
 {
     int result = 0;
     int mul = 0;
-    int i = 0;
+    int uriLength = len;
 
     while (*headP < uriLength && uriString[*headP] != '/')
     {
@@ -85,7 +86,7 @@ lwm2m_uri_t * lwm2m_decode_uri(multi_option_t *uriPath)
 
     if (NULL == uriPath) return NULL;
 
-    uriP = (lwm2m_uri_t *)malloc(sizeof(lwm2m_uri_t));
+    uriP = (lwm2m_uri_t *)lwm2m_malloc(sizeof(lwm2m_uri_t));
     if (NULL == uriP) return NULL;
 
     memset(uriP, 0, sizeof(lwm2m_uri_t));
@@ -147,16 +148,17 @@ lwm2m_uri_t * lwm2m_decode_uri(multi_option_t *uriPath)
     if (NULL == uriPath->next) return uriP;
 
 error:
-    free(uriP);
+    lwm2m_free(uriP);
     return NULL;
 }
 
 int lwm2m_stringToUri(char * buffer,
-                      size_t buffer_len,
+                      size_t len,
                       lwm2m_uri_t * uriP)
 {
     int head;
     int readNum;
+    int buffer_len = len;
 
     if (buffer == NULL || buffer_len == 0 || uriP == NULL) return 0;
 
