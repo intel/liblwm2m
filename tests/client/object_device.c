@@ -552,8 +552,10 @@ static uint8_t prv_device_write(lwm2m_uri_t * uriP,
 }
 
 static uint8_t prv_device_execute(lwm2m_uri_t * uriP,
-                                  char * buffer,
-                                  int length,
+								  char * rBuffer,
+								  int rLength,
+								  char ** wBuffer,
+								  int *wLength,
                                   lwm2m_object_t * objectP)
 {
     // this is a single instance object
@@ -562,7 +564,7 @@ static uint8_t prv_device_execute(lwm2m_uri_t * uriP,
         return COAP_404_NOT_FOUND;
     }
 
-    if (length != 0) return COAP_400_BAD_REQUEST;
+    if (rLength != 0) return COAP_400_BAD_REQUEST;
 
     // for execute callback, resId is always set.
     switch (uriP->resourceId)
