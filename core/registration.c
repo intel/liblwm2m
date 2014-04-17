@@ -102,7 +102,7 @@ int lwm2m_register(lwm2m_context_t * contextP)
     {
         lwm2m_transaction_t * transaction;
 
-        transaction = transaction_new(COAP_POST, NULL, contextP->nextMID++, ENDPOINT_SERVER, (void *)targetP);
+        transaction = transaction_new(COAP_POST, NULL, rand(), ENDPOINT_SERVER, (void *)targetP);
         if (transaction == NULL) return INTERNAL_SERVER_ERROR_5_00;
 
         coap_set_header_uri_path(transaction->message, "/"URI_REGISTRATION_SEGMENT);
@@ -136,7 +136,7 @@ void registration_deregister(lwm2m_context_t * contextP,
 
     if (serverP->status != STATE_REGISTERED) return;
 
-    coap_init_message(message, COAP_TYPE_CON, COAP_DELETE, contextP->nextMID++);
+    coap_init_message(message, COAP_TYPE_CON, COAP_DELETE, rand());
     coap_set_header_uri_path(message, serverP->location);
 
     pktBufferLen = coap_serialize_message(message, pktBuffer);

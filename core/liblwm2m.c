@@ -43,6 +43,8 @@ lwm2m_context_t * lwm2m_init(char * endpointName,
                              lwm2m_buffer_send_callback_t bufferSendCallback,
                              void * bufferSendUserData)
 {
+    srand(time(NULL));
+
     lwm2m_context_t * contextP;
 
     if (NULL == bufferSendCallback)
