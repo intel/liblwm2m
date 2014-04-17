@@ -265,7 +265,7 @@ void lwm2m_resource_value_changed(lwm2m_context_t * contextP,
 
             for (watcherP = listP->item->watcherList ; watcherP != NULL ; watcherP = watcherP->next)
             {
-                watcherP->lastMid = rand();
+                watcherP->lastMid = contextP->nextMID++;
                 message->mid = watcherP->lastMid;
                 coap_set_header_token(message, watcherP->token, watcherP->tokenLen);
                 coap_set_header_observe(message, watcherP->counter++);
@@ -392,7 +392,7 @@ int lwm2m_observe(lwm2m_context_t * contextP,
     if (observationP == NULL) return COAP_500_INTERNAL_SERVER_ERROR;
     memset(observationP, 0, sizeof(lwm2m_observation_t));
 
-    transactionP = transaction_new(COAP_GET, uriP, rand(), ENDPOINT_CLIENT, (void *)clientP);
+    transactionP = transaction_new(COAP_GET, uriP, contextP->nextMID++, ENDPOINT_CLIENT, (void *)clientP);
     if (transactionP == NULL)
     {
         lwm2m_free(observationP);

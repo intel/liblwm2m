@@ -382,6 +382,7 @@ typedef struct
     lwm2m_result_callback_t monitorCallback;
     void *                  monitorUserData;
 #endif
+    uint16_t          nextMID;
     lwm2m_transaction_t * transactionList;
     // buffer send callback
     lwm2m_buffer_send_callback_t bufferSendCallback;
