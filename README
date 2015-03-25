@@ -1,3 +1,7 @@
+
+# liblwm2m is now [wakaama] (https://github.com/eclipse/wakaama). This repo is no longer updated. Please use https://github.com/eclipse/wakaama.
+
+
 liblwm2m is an implementation of the Open Mobile Alliance's LightWeight M2M
 protocol (LWM2M).
 
