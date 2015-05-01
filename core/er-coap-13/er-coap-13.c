@@ -319,7 +319,7 @@ char * coap_get_multi_option_as_string(multi_option_t * option)
        len += opt->len + 1;     // for separator
     }
 
-    output = lwm2m_malloc(len + 1);
+    output = lwm2m_malloc(len + 1); // for String terminator
     if (output != NULL)
     {
         size_t i = 0;
@@ -332,6 +332,7 @@ char * coap_get_multi_option_as_string(multi_option_t * option)
             memmove(output + i, opt->data, opt->len);
             i += opt->len;
         }
+        output[len] = '\0';
     }
 
     return output;
