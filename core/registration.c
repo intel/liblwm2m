@@ -127,6 +127,38 @@ int lwm2m_register(lwm2m_context_t * contextP)
     return 0;
 }
 
+int lwm2m_update_registration(lwm2m_context_t * contextP)
+{
+    char payload[512];
+    int payload_length;
+    lwm2m_server_t * targetP;
+
+    targetP = contextP->serverList;
+    while (targetP != NULL)
+    {
+        if (targetP->status != STATE_REGISTERED) continue;
+
+        coap_packet_t message[1];
+        uint8_t pktBuffer[COAP_MAX_PACKET_SIZE+1];
+        size_t pktBufferLen = 0;
+
+
+        coap_init_message(message, COAP_TYPE_CON, COAP_PUT, contextP->nextMID++);
+        coap_set_header_uri_path(message, targetP->location);
+
+        pktBufferLen = coap_serialize_message(message, pktBuffer);
+        if (0 != pktBufferLen)
+        {
+            contextP->bufferSendCallback(targetP->sessionH, pktBuffer, pktBufferLen, contextP->bufferSendUserData);
+        }
+
+        targetP = targetP->next;
+    }
+
+    return 0;
+}
+
+
 void registration_deregister(lwm2m_context_t * contextP,
                              lwm2m_server_t * serverP)
 {
@@ -192,7 +224,7 @@ static int prv_getId(uint8_t * data,
     {
         data++;
         length-=2;
-    } 
+    }
     else
     {
         return 0;

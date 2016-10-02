@@ -121,6 +121,14 @@ static void prv_output_servers(char * buffer,
     }
 }
 
+static void prv_update(char * buffer,
+                       void * user_data)
+{
+    lwm2m_context_t * lwm2mH = (lwm2m_context_t *) user_data;
+    lwm2m_update_registration(lwm2mH);
+    fprintf(stdout,"REGISTRATION UPDATED\r\n");
+}
+
 static void prv_change(char * buffer,
                        void * user_data)
 {
@@ -210,6 +218,7 @@ int main(int argc, char *argv[])
             {"change", "Change the value of resource.", " change URI [DATA]\r\n"
                                                         "   URI: uri of the resource such as /3/0, /3/0/2\r\n"
                                                         "   DATA: (optional) new value\r\n", prv_change, NULL},
+            {"update", "Send a registration update to the servers.", NULL, prv_update, NULL},
             {"quit", "Quit the client gracefully.", NULL, prv_quit, NULL},
             {"^C", "Quit the client abruptly (without sending a de-register message).", NULL, NULL, NULL},
 

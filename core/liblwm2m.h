@@ -437,6 +437,8 @@ int lwm2m_add_server(lwm2m_context_t * contextP, uint16_t shortID, void * sessio
 
 // send registration message to all known LWM2M Servers.
 int lwm2m_register(lwm2m_context_t * contextP);
+// send a registration update message to all registered LWM2M Servers.
+int lwm2m_update_registration(lwm2m_context_t * contextP);
 // inform liblwm2m that a resource value has changed.
 void lwm2m_resource_value_changed(lwm2m_context_t * contextP, lwm2m_uri_t * uriP);
 #endif
